@@ -83,13 +83,14 @@ protected:
 };
 
 
+//* pure rate based method to blast UDP packets
 class CUDPBlast: public CCC
 {
 public:
    CUDPBlast()
    {
       m_dPktSndPeriod = 1000000; 
-      m_dCWndSize = 83333.0; 
+      m_dCWndSize = 83333.0;        // set to a large value in order not to affect the packet sending
    }
 
 public:

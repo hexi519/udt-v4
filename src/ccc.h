@@ -49,7 +49,7 @@ written by
 
 class UDT_API CCC
 {
-friend class CUDT;
+friend class CUDT;  // TODO 一般就用sourceForge去看代码结构
 
 public:
    CCC();
@@ -116,7 +116,7 @@ public:
       // Returned value:
       //    None.
 
-   virtual void onPktSent(const CPacket*) {}
+   virtual void onPktSent(const CPacket*) {}   // TODO read CPacket later
 
       // Functionality:
       //    Callback function to be called when a data is received.
@@ -146,6 +146,7 @@ protected:
       // Returned value:
       //    None.
 
+    // hesy translation: 在CC类的init里面启用，以ms为单位，精度取决于特定平台且不能超过1ms
    void setACKTimer(int msINT);
 
       // Functionality:
@@ -155,6 +156,7 @@ protected:
       // Returned value:
       //    None.
 
+    // hesy translation: 配置发送ACK之前要接收的数据包数量。这是默认的确认方法，默认情况下将确认每个数据包。基于数据包和基于计时器的确认是互斥的。 pktINT是数据包间隔。
    void setACKInterval(int pktINT);
 
       // Functionality:
@@ -164,6 +166,7 @@ protected:
       // Returned value:
       //    None.
 
+    // hesy: usRTO 以微秒为单位
    void setRTO(int usRTO);
 
       // Functionality:
@@ -173,6 +176,8 @@ protected:
       // Returned value:
       //    None.
 
+    // hesy: 控制消息pkt必须符合./src/packet.cpp中定义的数据包格式
+    // 该消息是通过UDP发送的；因此，不能保证发送成功或顺序不正确。
    void sendCustomMsg(CPacket& pkt) const;
 
       // Functionality:
@@ -182,6 +187,7 @@ protected:
       // Returned value:
       //    Pointer to a performance info structure.
 
+    // hesy: 可以读取内部UDT参数和流统计信息。这类似于perfmon（）方法
    const CPerfMon* getPerfInfo();
 
       // Functionality:
@@ -196,17 +202,19 @@ protected:
 
 private:
    void setMSS(int mss);
-   void setMaxCWndSize(int cwnd);
+   void setMaxCWndSize(int cwnd);   // TODO why max windowsize instead of window size
    void setBandwidth(int bw);
-   void setSndCurrSeqNo(int32_t seqno);
+   void setSndCurrSeqNo(int32_t seqno);   // TODO 
    void setRcvRate(int rcvrate);
    void setRTT(int rtt);
 
 protected:
-   const int32_t& m_iSYNInterval;	// UDT constant parameter, SYN
+   const int32_t& m_iSYNInterval;	// UDT constant parameter, SYN  //? 专门用于SYN超时?
 
-   double m_dPktSndPeriod;              // Packet sending period, in microseconds
-   double m_dCWndSize;                  // Congestion window size, in packets
+    // * 这是通过rate control算法更新的数据包发送周期。如果使用基于纯窗口的算法，请将此变量固定为0。
+   double m_dPktSndPeriod;              ///> Packet sending period, in microseconds
+   // * 这是由window control算法更新的拥塞窗口大小。如果使用纯速率控制算法，则将此变量固定为infinite。
+   double m_dCWndSize;                  ///> Congestion window size, in packets
 
    int m_iBandwidth;			// estimated bandwidth, packets per second
    double m_dMaxCWndSize;               // maximum cwnd size, in packets

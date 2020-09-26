@@ -90,7 +90,7 @@ written by
       #define UDT_API
    #endif
 #else
-   #define UDT_API __attribute__ ((visibility("default")))
+   #define UDT_API __attribute__ ((visibility("default")))  // TODO
 #endif
 
 #define NO_BUSY_WAITING
@@ -135,23 +135,23 @@ enum UDTOpt
    UDT_SNDSYN,          // if sending is blocking
    UDT_RCVSYN,          // if receiving is blocking
    UDT_CC,              // custom congestion control algorithm
-   UDT_FC,		// Flight flag size (window size)
-   UDT_SNDBUF,          // maximum buffer in sending queue
-   UDT_RCVBUF,          // UDT receiving buffer size
-   UDT_LINGER,          // waiting for unsent data when closing
-   UDP_SNDBUF,          // UDP sending buffer size
-   UDP_RCVBUF,          // UDP receiving buffer size
+   UDT_FC,		// Flight flag size (window size)   //* 除非您清楚地知道自己在做什么，否则不建议修改此值。修改buffer值之前应该先修改这个
+   UDT_SNDBUF,          // maximum buffer in sending queue  //* 10240000 default (10MB)
+   UDT_RCVBUF,          // UDT receiving buffer size //* 10240000 default (10MB)
+   UDT_LINGER,          // waiting for unsent data when closing //* defalut 180s
+   UDP_SNDBUF,          // UDP sending buffer size  //* default 1MB（1024000）  //? UDP还有buffer?
+   UDP_RCVBUF,          // UDP receiving buffer size   //* default 1MB（1024000）
    UDT_MAXMSG,          // maximum datagram message size
    UDT_MSGTTL,          // time-to-live of a datagram message
-   UDT_RENDEZVOUS,      // rendezvous connection mode
-   UDT_SNDTIMEO,        // send() timeout
-   UDT_RCVTIMEO,        // recv() timeout
-   UDT_REUSEADDR,	// reuse an existing port or create a new one
-   UDT_MAXBW,		// maximum bandwidth (bytes per second) that the connection can use
+   UDT_RENDEZVOUS,      // rendezvous connection mode   // default false
+   UDT_SNDTIMEO,        // send() timeout   //* default -1 (infinite long)
+   UDT_RCVTIMEO,        // recv() timeout   //* default -1 (infinite long)
+   UDT_REUSEADDR,	// reuse an existing port or create a new one   //* default true -> is reusable
+   UDT_MAXBW,		// maximum bandwidth (bytes per second) that the connection can use     //* default -1, infinite
    UDT_STATE,		// current socket state, see UDTSTATUS, read only
-   UDT_EVENT,		// current avalable events associated with the socket
-   UDT_SNDDATA,		// size of data in the sending buffer
-   UDT_RCVDATA		// size of data available for recv
+   UDT_EVENT,		// current avalable events associated with the socket, read only
+   UDT_SNDDATA,		// size of data in the sending buffer, read only
+   UDT_RCVDATA		// size of data available for recv, read only
 };
 
 ////////////////////////////////////////////////////////////////////////////////
